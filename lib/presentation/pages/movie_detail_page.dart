@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../common/constants.dart';
 import '../../common/state_enum.dart';
+import '../../domain/entities/movie.dart';
 import '../../domain/entities/movie_detail.dart';
 import '../provider/movie_detail_notifier.dart';
 
@@ -40,7 +41,10 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           } else if (provider.movieState == RequestState.Loaded) {
             final movie = provider.movie;
             return SafeArea(
-              child: DetailContent(movie),
+              child: DetailContent(
+                movie,
+                provider.movieRecommendations,
+              ),
             );
           } else {
             return Text(provider.message);
@@ -53,8 +57,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
 
 class DetailContent extends StatelessWidget {
   final MovieDetail movie;
+  final List<Movie> recommendations;
 
-  DetailContent(this.movie);
+  DetailContent(this.movie, this.recommendations);
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +127,63 @@ class DetailContent extends StatelessWidget {
                             Text(
                               'Recommendations',
                               style: kHeading6,
+                            ),
+                            Consumer<MovieDetailNotifier>(
+                              builder: (context, data, child) {
+                                if (data.recommendationState ==
+                                    RequestState.Loading) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                } else if (data.recommendationState ==
+                                    RequestState.Error) {
+                                  return Text(data.message);
+                                } else if (data.recommendationState ==
+                                    RequestState.Loaded) {
+                                  return Container(
+                                    height: 150,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        final movie = recommendations[index];
+                                        return Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: InkWell(
+                                            onTap: () {
+                                              Navigator.pushReplacementNamed(
+                                                context,
+                                                MovieDetailPage.ROUTE_NAME,
+                                                arguments: movie.id,
+                                              );
+                                            },
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                Radius.circular(8),
+                                              ),
+                                              child: CachedNetworkImage(
+                                                imageUrl:
+                                                    'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                                                placeholder: (context, url) =>
+                                                    const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                                errorWidget:
+                                                    (context, url, error) =>
+                                                        const Icon(Icons.error),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      itemCount: recommendations.length,
+                                    ),
+                                  );
+                                } else {
+                                  return Container();
+                                }
+                              },
                             ),
                           ],
                         ),

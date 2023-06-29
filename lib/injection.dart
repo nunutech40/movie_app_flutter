@@ -1,5 +1,8 @@
 import 'package:get_it/get_it.dart';
+import 'package:movie_app_flutter/domain/usecases/get_movie_detail_byid.dart';
 import 'package:movie_app_flutter/domain/usecases/get_now_popular_movies.dart';
+import 'package:movie_app_flutter/domain/usecases/get_top_rated_movies.dart';
+import 'package:movie_app_flutter/presentation/provider/movie_detail_notifier.dart';
 import 'package:movie_app_flutter/presentation/provider/movie_list_notifier.dart';
 
 import 'data/datasources/movie_remote_data_source.dart';
@@ -13,11 +16,18 @@ final locator = GetIt.instance;
 void init() {
   // provider
   locator.registerFactory(() => MovieListNotifier(
-      getNowPlayingMovies: locator(), getNowPopularMovies: locator()));
+      getNowPlayingMovies: locator(),
+      getNowPopularMovies: locator(),
+      getTopRatedMovies: locator()));
+
+  locator.registerFactory(
+      () => MovieDetailNotifier(getMovieDetailById: locator()));
 
   // usecase
   locator.registerLazySingleton(() => GetNowPlayingMovies(locator()));
   locator.registerLazySingleton(() => GetNowPopularMovies(locator()));
+  locator.registerLazySingleton(() => GetTopRatedMovies(locator()));
+  locator.registerLazySingleton(() => GetMovieDetailById(locator()));
 
   // repository
   locator.registerLazySingleton<MovieRepository>(

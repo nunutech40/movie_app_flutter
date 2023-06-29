@@ -5,6 +5,7 @@ import 'package:movie_app_flutter/common/exception.dart';
 import 'package:movie_app_flutter/common/failure.dart';
 import 'package:movie_app_flutter/data/datasources/movie_remote_data_source.dart';
 import 'package:movie_app_flutter/domain/entities/movie.dart';
+import 'package:movie_app_flutter/domain/entities/movie_detail.dart';
 
 import '../../domain/repositories/movie_repository.dart';
 
@@ -32,6 +33,32 @@ class MovieRepositoryImpl extends MovieRepository {
     try {
       final result = await remoteDataSource.getPopularMovies();
       return Right(result.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return Left(ServerFailure(''));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<Movie>>> getTopRatedMovies() async {
+    try {
+      final result = await remoteDataSource.getTopRatedMovies();
+
+      return Right(result.map((model) => model.toEntity()).toList());
+    } on ServerException {
+      return Left(ServerFailure(''));
+    } on SocketException {
+      return Left(ConnectionFailure('Failed to connect to the network'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, MovieDetail>> getMovieDetailById(int id) async {
+    try {
+      final result = await remoteDataSource.getMovieDetail(id);
+
+      return Right(result.toEntity());
     } on ServerException {
       return Left(ServerFailure(''));
     } on SocketException {

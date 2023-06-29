@@ -6,6 +6,7 @@ import '../../common/constants.dart';
 import '../../common/state_enum.dart';
 import '../../domain/entities/movie.dart';
 import '../provider/movie_list_notifier.dart';
+import 'movie_detail_page.dart';
 
 class HomeMoviePage extends StatefulWidget {
   @override
@@ -19,7 +20,8 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
     Future.microtask(
         () => Provider.of<MovieListNotifier>(context, listen: false)
           ..fetchNowPlayingMovies()
-          ..fetchPopularMovies());
+          ..fetchPopularMovies()
+          ..fetchTopRatedMovies());
   }
 
   @override
@@ -100,6 +102,19 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 return Text('Failed');
               }
             }),
+            _buildSubHeading(title: 'Top Rated', onTap: () {}),
+            Consumer<MovieListNotifier>(builder: (context, data, child) {
+              final state = data.topRatedMoviesState;
+              if (state == RequestState.Loading) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state == RequestState.Loaded) {
+                return MovieList(data.topRatedMovies);
+              } else {
+                return Text('Failed');
+              }
+            }),
           ]),
         ),
       ),
@@ -144,7 +159,13 @@ class MovieList extends StatelessWidget {
           return Container(
             padding: const EdgeInsets.all(8),
             child: InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  MovieDetailPage.ROUTE_NAME,
+                  arguments: movie.id,
+                );
+              },
               child: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(16)),
                 child: CachedNetworkImage(

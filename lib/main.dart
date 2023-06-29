@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_app_flutter/presentation/pages/home_movie_page.dart';
+import 'package:movie_app_flutter/presentation/pages/movie_detail_page.dart';
+import 'package:movie_app_flutter/presentation/provider/movie_detail_notifier.dart';
 import 'package:movie_app_flutter/presentation/provider/movie_list_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +25,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<MovieListNotifier>(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<MovieDetailNotifier>(),
+        ),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',
@@ -38,6 +43,12 @@ class MyApp extends StatelessWidget {
             switch (settings.name) {
               case '/home':
                 return MaterialPageRoute(builder: (_) => HomeMoviePage());
+              case MovieDetailPage.ROUTE_NAME:
+                final id = settings.arguments as int;
+                return MaterialPageRoute(
+                  builder: (_) => MovieDetailPage(id: id),
+                  settings: settings,
+                );
             }
           }),
     );

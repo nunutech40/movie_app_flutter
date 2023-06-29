@@ -20,6 +20,7 @@ class PopularMoviesNotifier extends ChangeNotifier {
 
   Future<void> fetchPopularMovies() async {
     _state = RequestState.Loading;
+   
     notifyListeners();
 
     final result = await getPopularMovies.execute();

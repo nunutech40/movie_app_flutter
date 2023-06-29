@@ -1,6 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app_flutter/presentation/pages/about_page.dart';
+import 'package:movie_app_flutter/presentation/pages/popular_movies_page.dart';
 import 'package:movie_app_flutter/presentation/pages/search_page.dart';
+import 'package:movie_app_flutter/presentation/pages/top_rated_movies_page.dart';
+import 'package:movie_app_flutter/presentation/pages/watchlist_movies_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/constants.dart';
@@ -48,10 +52,14 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
             ListTile(
               leading: const Icon(Icons.save_alt),
               title: const Text('Watchlist'),
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, WatchlistMoviesPage.ROUTE_NAME);
+              },
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                Navigator.pushNamed(context, AboutPage.ROUTE_NAME);
+              },
               leading: const Icon(Icons.info_outline),
               title: const Text('About'),
             ),
@@ -91,7 +99,11 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 return Text('Failed');
               }
             }),
-            _buildSubHeading(title: 'Popular', onTap: () {}),
+            _buildSubHeading(
+                title: 'Popular',
+                onTap: () {
+                  Navigator.pushNamed(context, PopularMoviesPage.ROUTE_NAME);
+                }),
             Consumer<MovieListNotifier>(builder: (context, data, child) {
               final state = data.popularMoviesState;
 
@@ -105,7 +117,11 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
                 return Text('Failed');
               }
             }),
-            _buildSubHeading(title: 'Top Rated', onTap: () {}),
+            _buildSubHeading(
+                title: 'Top Rated',
+                onTap: () {
+                  Navigator.pushNamed(context, TopRatedMoviesPage.ROUTE_NAME);
+                }),
             Consumer<MovieListNotifier>(builder: (context, data, child) {
               final state = data.topRatedMoviesState;
               if (state == RequestState.Loading) {

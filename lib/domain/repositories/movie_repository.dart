@@ -10,4 +10,5 @@ abstract class MovieRepository {
   Future<Either<Failure, List<Movie>>> getTopRatedMovies();
   Future<Either<Failure, MovieDetail>> getMovieDetailById(int id);
   Future<Either<Failure, List<Movie>>> getMovieRecommendations(int id);
+  Future<Either<Failure, List<Movie>>> searchMovies(String query);
 }

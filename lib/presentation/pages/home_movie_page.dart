@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movie_app_flutter/presentation/pages/search_page.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/constants.dart';
@@ -61,7 +62,9 @@ class _HomeMoviePageState extends State<HomeMoviePage> {
         title: Text('Ditonton'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, SearchPage.ROUTE_NAME);
+            },
             icon: Icon(Icons.search),
           )
         ],

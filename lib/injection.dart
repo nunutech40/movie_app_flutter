@@ -3,8 +3,10 @@ import 'package:movie_app_flutter/domain/usecases/get_movie_detail_byid.dart';
 import 'package:movie_app_flutter/domain/usecases/get_movie_recommendation.dart';
 import 'package:movie_app_flutter/domain/usecases/get_now_popular_movies.dart';
 import 'package:movie_app_flutter/domain/usecases/get_top_rated_movies.dart';
+import 'package:movie_app_flutter/domain/usecases/search_movies.dart';
 import 'package:movie_app_flutter/presentation/provider/movie_detail_notifier.dart';
 import 'package:movie_app_flutter/presentation/provider/movie_list_notifier.dart';
+import 'package:movie_app_flutter/presentation/provider/movie_search_notifier.dart';
 
 import 'data/datasources/movie_remote_data_source.dart';
 import 'data/repositories/movie_repository_impl.dart';
@@ -24,12 +26,15 @@ void init() {
   locator.registerFactory(() => MovieDetailNotifier(
       getMovieDetailById: locator(), getMovieRecommendations: locator()));
 
+  locator.registerFactory(() => MovieSearchNotifier(searchMovies: locator()));
+
   // usecase
   locator.registerLazySingleton(() => GetNowPlayingMovies(locator()));
   locator.registerLazySingleton(() => GetNowPopularMovies(locator()));
   locator.registerLazySingleton(() => GetTopRatedMovies(locator()));
   locator.registerLazySingleton(() => GetMovieDetailById(locator()));
   locator.registerLazySingleton(() => GetMovieRecommendations(locator()));
+  locator.registerLazySingleton(() => SearchMovies(locator()));
 
   // repository
   locator.registerLazySingleton<MovieRepository>(

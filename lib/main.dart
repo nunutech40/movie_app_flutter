@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app_flutter/presentation/pages/home_movie_page.dart';
 import 'package:movie_app_flutter/presentation/pages/movie_detail_page.dart';
+import 'package:movie_app_flutter/presentation/pages/search_page.dart';
 import 'package:movie_app_flutter/presentation/provider/movie_detail_notifier.dart';
 import 'package:movie_app_flutter/presentation/provider/movie_list_notifier.dart';
+import 'package:movie_app_flutter/presentation/provider/movie_search_notifier.dart';
 import 'package:provider/provider.dart';
 
 import 'package:movie_app_flutter/injection.dart' as di;
@@ -28,6 +31,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => di.locator<MovieDetailNotifier>(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<MovieSearchNotifier>(),
+        ),
       ],
       child: MaterialApp(
           title: 'Flutter Demo',
@@ -49,6 +55,8 @@ class MyApp extends StatelessWidget {
                   builder: (_) => MovieDetailPage(id: id),
                   settings: settings,
                 );
+              case SearchPage.ROUTE_NAME:
+                return CupertinoPageRoute(builder: (_) => SearchPage());
             }
           }),
     );
